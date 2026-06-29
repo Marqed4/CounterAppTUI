@@ -1,6 +1,6 @@
 #[cfg(test)]
 use super::*;
-use ratatui::style::Style;
+use crate::graphics::decimal_numbers::new_u8_to_ascii_string;
 
 #[test]
 fn render() {
@@ -10,7 +10,7 @@ fn render() {
     app.render(buf.area, &mut buf);
 
     let mut expected = Buffer::with_lines(vec![
-        "┏━━━━━━━━━━━━━ Counter App Tutorial ━━━━━━━━━━━━━┓",
+        "┏━━━━━━━━━━━━━━━━━━ Counter App ━━━━━━━━━━━━━━━━━┓",
         "┃                    Value: 0                    ┃",
         "┃                                                ┃",
         "┗━ Decrement <Left> Increment <Right> Quit <Q> ━━┛",
@@ -39,4 +39,15 @@ fn handle_key_event() {
     let mut app = App::default();
     app.handle_key_event(KeyCode::Char('q').into());
     assert!(app.exit);
+}
+
+#[test]
+fn test_u8_to_ascii_string() {
+    let result = new_u8_to_ascii_string(60);
+    assert_eq!(result, r"
+666666 000000
+66     00  00
+666666 00  00
+66  66 00  00
+666666 000000",);
 }

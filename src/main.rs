@@ -1,10 +1,6 @@
-use core::time;
-use std::io;
+use std::{io, vec};
 
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
-use crossterm::{
-    ExecutableCommand,
-};
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
@@ -16,7 +12,11 @@ use ratatui::{
     DefaultTerminal, Frame,
     text::*
 };
+use crate::graphics::decimal_numbers::new_u8_to_ascii_string;
 
+mod graphics
+;
+#[cfg(test)]
 mod tests;
 
 #[derive(Debug, Default)]
@@ -82,7 +82,7 @@ impl App {
 
 impl Widget for &App {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let title = Line::from(" Counter App Tutorial ".bold());
+        let title = Line::from(" Counter App ".bold());
 
         let blink_style = Style::default()
             .fg(Color::Blue)
@@ -117,14 +117,40 @@ impl Widget for &App {
             ])
         ]);
 
-        Paragraph::new(counter_text)
+        let asdfasda = new_u8_to_ascii_string(self.counter);
+        let counter_graphic = Text::from(
+            asdfasda.lines().map(|l| Line::from(l.to_string())).collect::<Vec<_>>()
+        );
+
+        let counter_text = Text::from(vec![
+            Line::from(vec![
+                "Value: ".into(),
+                self.counter.to_string().yellow(),
+            ]),
+            Line::from(""),
+            Line::from(""),
+        ]);
+
+        let counter_graphic = Text::from(
+            asdfasda.lines().map(|l| Line::from(l.to_string())).collect::<Vec<_>>()
+        );
+
+        let combined = Text::from(
+            counter_text.lines.into_iter()
+                .chain(counter_graphic.lines.into_iter())
+                .collect::<Vec<_>>()
+        );
+
+        Paragraph::new(combined)
             .centered()
             .block(block)
+            .centered()
             .render(area, buf);
+            }
         }
-}
 
 fn main() {
+    print!("{}",new_u8_to_ascii_string(255));
     ratatui::run(|terminal| App::default().run(terminal));
 
 }
