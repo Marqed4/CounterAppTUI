@@ -6,55 +6,55 @@ use std::vec;
 // Main only allows the user to count up to u8 sized integer.
 pub fn get_ascii_number(idx: u8) -> Vec<&'static str> {
     let zero: Vec<&str> = vec![
-        "000000",
+        " 0000 ",
         "00  00",
         "00  00",
         "00  00",
-        "000000",
+        " 0000 ",
     ];
 
     let one: Vec<&str> = vec![
-        "1111",
-        "1 11",
-        "  11",
-        "  11",
-        "111111",
+        "  11  ",
+        " 111  ",
+        "  11  ",
+        "  11  ",
+        " 1111 ",
     ];
 
     let two: Vec<&str> = vec![
-        "222222",
-        "     2",
         " 2222 ",
-        "2     ",
+        "22  22",
+        "   22 ",
+        " 22   ",
         "222222",
     ];
 
     let three: Vec<&str> = vec![
-        "33333 ",
-        "    33",
-        "333333",
-        "    33",
-        "33333 ",
+        " 3333 ",
+        "33  33",
+        "  333 ",
+        "33  33",
+        " 3333 ",
     ];
 
     let four: Vec<&str> = vec![
         "44  44",
         "44  44",
-        " 44444",
+        "444444",
         "    44",
         "    44",
     ];
 
-    let five:Vec<&str> = vec![
+    let five: Vec<&str> = vec![
         "555555",
         "55    ",
-        "555555",
+        "55555 ",
         "    55",
-        "555555",
+        "55555 ",
     ];
 
     let six: Vec<&str> = vec![
-        "666666",
+        " 6666 ",
         "66    ",
         "66666 ",
         "66  66",
@@ -63,10 +63,10 @@ pub fn get_ascii_number(idx: u8) -> Vec<&'static str> {
 
     let seven: Vec<&str> = vec![
         "777777",
-        "    77",
-        "    77",
-        "    77",
-        "    77",
+        "   77 ",
+        "  77  ",
+        " 77   ",
+        " 77   ",
     ];
 
     let eight: Vec<&str> = vec![
@@ -80,9 +80,9 @@ pub fn get_ascii_number(idx: u8) -> Vec<&'static str> {
     let nine: Vec<&str> = vec![
         " 9999 ",
         "99  99",
-        " 9999 ",
+        " 99999",
         "    99",
-        "99999 ",
+        " 9999 ",
     ];
 
     let ascii_numbers = vec![zero, one, two, three, four, five, six, seven, eight, nine];
@@ -93,28 +93,43 @@ pub fn get_ascii_number(idx: u8) -> Vec<&'static str> {
 // ASCII concat on a level basis.
 // Thoughts: Build each digit as vector line and zip them together.
 pub fn new_u8_to_ascii_string(mut value: u8) -> String {
-    let mut ascii_string = String::new();
+
     let mut current_ascii_numbers = vec![];
 
+    fn create_ascii(current_ascii_numbers: Vec<Vec<&str>>) -> String {
+        
+        let mut ascii_string = String::new();
+
+        for idx in 0..5 {
+            for i in 0..current_ascii_numbers.len() {
+                ascii_string.push_str(current_ascii_numbers[i][idx]);
+                // Tab size eq four spaces.
+                ascii_string.push_str("    ");
+                /* Depending on the distance of the last char 
+                in a string calculate spaces until next sub vector. */
+                for _ in 1..(6 - current_ascii_numbers[i][idx].len()) {
+                    // Push strings to continue gap formating
+                    ascii_string.push_str(" ");
+                }
+            }
+            ascii_string.push('\n');
+        }
+
+        return ascii_string
+    }
+
+    // Unsigned integer limitations:
+
+    // u8 for values equal to 0
+    if value == 0 {
+        current_ascii_numbers.insert(0, get_ascii_number(0));
+    }
+
+    // u8 for values greater than 0
     while value != 0 {
         current_ascii_numbers.insert(0, get_ascii_number(value % 10));
         value = value / 10;
     }
 
-    for idx in 0..5 {
-        for i in 0..current_ascii_numbers.len() {
-            ascii_string.push_str(current_ascii_numbers[i][idx]);
-            // Tab size eq four spaces.
-            ascii_string.push_str("    ");
-            /* Depending on the distance of the last char 
-            in a string calculate spaces until next sub vector. */
-            for _ in 1..(6 - current_ascii_numbers[i][idx].len()) {
-                // Push strings to continue gap formating
-                ascii_string.push_str(" ");
-            }
-        }
-        ascii_string.push('\n');
-    }
-
-    return ascii_string
+    return create_ascii(current_ascii_numbers);
 }
