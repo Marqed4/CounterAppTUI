@@ -105,15 +105,13 @@ impl Widget for &App {
             " Quit ".into(),
             "<Q> ".blue().bold(),
         ]);
+
         let block = Block::bordered()
             .title(title.centered())
             .title_bottom(instructions.centered())
-            .border_set(border::THICK);;
+            .border_set(border::THICK);
 
         let ascii_string = new_u8_to_ascii_string(self.counter);
-        // let counter_graphic = Text::from(
-        //     ascii_string.lines().map(|l| Line::from(l.to_string())).collect::<Vec<_>>()
-        // );
 
         let style_lipstick_pop = lipstick_pop().render(&ascii_string);
         let counter_graphic  = style_lipstick_pop.into_text().unwrap();
