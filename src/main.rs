@@ -1,18 +1,11 @@
 use std::{io, vec};
-use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
+use ratatui::{layout::Offset};
+use crossterm::{event::{self, Event, KeyCode, KeyEvent, KeyEventKind}};
 use ratatui::{
-    buffer::Buffer,
-    layout::Rect,
-    style::Stylize,
-    symbols::border,
-    text::{Line, Text},
-    widgets::{Block, Paragraph, Widget},
-    style::{Color, Style, Modifier},
-    DefaultTerminal, Frame,
-    text::*
+    DefaultTerminal, Frame, buffer::Buffer, layout::Rect, style::{Color, Modifier, Style, Stylize}, symbols::border, text::{Line, Text, *}, widgets::{Block, Paragraph, Shadow, Widget}
 };
 use ansi_to_tui::IntoText;
-use crate::{graphics::decimal_numbers::new_u8_to_ascii_string, charm_styles::styles::lipstick_pop};
+use crate::{graphics::decimal_numbers::new_u8_to_ascii_string, charm_styles::custom_styles::lipstick_pop};
 
 mod graphics;
 mod charm_styles;
@@ -42,7 +35,7 @@ impl App {
 
     fn handle_events(&mut self) -> io::Result<()> {
         match event::read()? {
-            // it's important to check that the event is a key press event as
+            // It's important to check that the event is a key press event as
             // crossterm also emits key release and repeat events on Windows.
             Event::Key(key_event) if key_event.kind == KeyEventKind::Press => {
                 self.handle_key_event(key_event);
@@ -82,10 +75,10 @@ impl App {
 
 impl Widget for &App {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let title = Line::from(" Counter App ".bold());
+        let title = Line::from(" Counter App ").bold().magenta().slow_blink();
 
         let blink_style = Style::default()
-            .fg(Color::Blue)
+            .fg(Color::Magenta)
             .add_modifier(Modifier::BOLD)
             .add_modifier(Modifier::RAPID_BLINK);
 
@@ -94,22 +87,28 @@ impl Widget for &App {
             if self.last_pressed == Some(false) {
                 Span::styled("<Left>", blink_style)
             } else {
-                "<Left>".blue().bold()
+                "<Left>".magenta().bold()
             },
             " Increment ".into(),
             if self.last_pressed == Some(true) {
                 Span::styled("<Right>", blink_style)
             } else {
-                "<Right>".blue().bold()
+                "<Right>".magenta().bold()
             },
             " Quit ".into(),
-            "<Q> ".blue().bold(),
+            "<Q> ".magenta().bold(),
         ]);
 
         let block = Block::bordered()
             .title(title.centered())
             .title_bottom(instructions.centered())
-            .border_set(border::THICK);
+            .border_set(border::THICK)
+            .shadow(Shadow::dark_shade()
+                .magenta()
+                .on_cyan()
+                .offset(Offset::new(2, 1)),
+            )
+            .on_light_magenta();
 
         let ascii_string = new_u8_to_ascii_string(self.counter);
 
@@ -134,12 +133,11 @@ impl Widget for &App {
         Paragraph::new(combined)
             .centered()
             .block(block)
-            .centered()
+            .add_modifier(Modifier::ITALIC)
             .render(area, buf);
             }
         }
 
 fn main() {
     let _ = ratatui::run(|terminal| App::default().run(terminal));
-
 }

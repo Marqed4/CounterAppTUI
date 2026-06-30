@@ -104,15 +104,8 @@ pub fn new_u8_to_ascii_string(mut value: u8) -> String {
             for i in 0..current_ascii_numbers.len() {
                 ascii_string.push_str(current_ascii_numbers[i][idx]);
                 // Tab size eq four spaces.
-                ascii_string.push_str("    ");
-                /* Depending on the distance of the last char 
-                in a string calculate spaces until next sub vector. */
-                // Don't apply spacing to the character because it offsets the image.
                 if i != current_ascii_numbers.len() - 1 {
-                    for _ in 1..(6 - current_ascii_numbers[i][idx].len()) {
-                        // Push strings to continue gap formating
-                        ascii_string.push_str(" ");
-                    }
+                    ascii_string.push_str("  ");
                 }
             }
             ascii_string.push('\n');

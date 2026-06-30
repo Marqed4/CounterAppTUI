@@ -1,1 +1,1 @@
-pub mod styles;
+pub mod custom_styles;
