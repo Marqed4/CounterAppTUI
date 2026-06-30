@@ -44,10 +44,12 @@ fn handle_key_event() {
 #[test]
 fn test_u8_to_ascii_string() {
     let result = new_u8_to_ascii_string(60);
-    assert_eq!(result, r"
-666666 000000
-66     00  00
-666666 00  00
-66  66 00  00
-666666 000000",);
+    assert_eq!(result,
+"
+666666    000000
+66        00  00
+66666     00  00
+66  66    00  00
+ 6666     000000
+ ",);
 }

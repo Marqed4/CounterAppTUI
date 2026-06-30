@@ -1,5 +1,4 @@
 use std::{io, vec};
-
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     buffer::Buffer,
@@ -12,10 +11,11 @@ use ratatui::{
     DefaultTerminal, Frame,
     text::*
 };
-use crate::graphics::decimal_numbers::new_u8_to_ascii_string;
+use ansi_to_tui::IntoText;
+use crate::{graphics::decimal_numbers::new_u8_to_ascii_string, charm_styles::styles::lipstick_pop};
 
-mod graphics
-;
+mod graphics;
+mod charm_styles;
 #[cfg(test)]
 mod tests;
 
@@ -117,10 +117,13 @@ impl Widget for &App {
             ])
         ]);
 
-        let asdfasda = new_u8_to_ascii_string(self.counter);
-        let counter_graphic = Text::from(
-            asdfasda.lines().map(|l| Line::from(l.to_string())).collect::<Vec<_>>()
-        );
+        let ascii_string = new_u8_to_ascii_string(self.counter);
+        // let counter_graphic = Text::from(
+        //     ascii_string.lines().map(|l| Line::from(l.to_string())).collect::<Vec<_>>()
+        // );
+
+        let style_lipstick_pop = lipstick_pop().render(&ascii_string);
+        let counter_graphic  = style_lipstick_pop.into_text().unwrap();
 
         let counter_text = Text::from(vec![
             Line::from(vec![
@@ -130,10 +133,6 @@ impl Widget for &App {
             Line::from(""),
             Line::from(""),
         ]);
-
-        let counter_graphic = Text::from(
-            asdfasda.lines().map(|l| Line::from(l.to_string())).collect::<Vec<_>>()
-        );
 
         let combined = Text::from(
             counter_text.lines.into_iter()
@@ -150,7 +149,6 @@ impl Widget for &App {
         }
 
 fn main() {
-    print!("{}",new_u8_to_ascii_string(255));
     ratatui::run(|terminal| App::default().run(terminal));
 
 }

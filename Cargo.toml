@@ -4,5 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+ansi-to-tui = "8.0.1"
+charm = "0.0.1"
+charmed-lipgloss = "0.2.0"
 crossterm = "0.29.0"
 ratatui = "0.30.2"
