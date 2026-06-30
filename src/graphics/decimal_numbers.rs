@@ -1,6 +1,4 @@
 use std::vec;
-#[cfg(test)]
-use crate::tests;
 /*  GOAL: Create a module 
     that will return a valid ascii combination 
     that represents a given number. */
@@ -87,7 +85,7 @@ pub fn get_ascii_number(idx: u8) -> Vec<&'static str> {
         "99999 ",
     ];
 
-    let ascii_numbers = vec![zero, one, two, three, four, five, six, seven, eight, nine];;
+    let ascii_numbers = vec![zero, one, two, three, four, five, six, seven, eight, nine];
 
     return ascii_numbers[idx as usize].to_vec();
 }

@@ -108,14 +108,7 @@ impl Widget for &App {
         let block = Block::bordered()
             .title(title.centered())
             .title_bottom(instructions.centered())
-            .border_set(border::THICK);
-
-        let counter_text = Text::from(vec![
-            Line::from(vec![
-                "Value: ".into(),
-                self.counter.to_string().yellow(),
-            ])
-        ]);
+            .border_set(border::THICK);;
 
         let ascii_string = new_u8_to_ascii_string(self.counter);
         // let counter_graphic = Text::from(
@@ -149,6 +142,6 @@ impl Widget for &App {
         }
 
 fn main() {
-    ratatui::run(|terminal| App::default().run(terminal));
+    let _ = ratatui::run(|terminal| App::default().run(terminal));
 
 }
